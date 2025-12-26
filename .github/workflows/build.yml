@@ -21,14 +21,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install streamlit pandas openpyxl pyinstaller
     
-    - name: Create hooks directory
-      run: mkdir hooks
-    
-    - name: Create PyInstaller hook for Streamlit
-      run: |
-        echo 'from PyInstaller.utils.hooks import copy_metadata' > hooks/hook-streamlit.py
-        echo 'datas = copy_metadata('\''streamlit'\'')' >> hooks/hook-streamlit.py
-    
     - name: Build executable with PyInstaller
       run: |
         pyinstaller --noconfirm --onefile --windowed --additional-hooks-dir=./hooks --clean --name "订单完工率分析系统" --add-data "app.py;." run_main.py
