@@ -1,0 +1,51 @@
+name: Build Windows Executable
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install streamlit pandas openpyxl pyinstaller
+    
+    - name: Create hooks directory
+      run: mkdir hooks
+    
+    - name: Create PyInstaller hook for Streamlit
+      run: |
+        echo 'from PyInstaller.utils.hooks import copy_metadata
+datas = copy_metadata('\''streamlit'\'')' > hooks/hook-streamlit.py
+    
+    - name: Build executable with PyInstaller
+      run: |
+        pyinstaller --noconfirm --onefile --windowed --additional-hooks-dir=./hooks --clean --name "订单完工率分析系统" --add-data "app.py;." run_main.py
+    
+    - name: Create output directory
+      run: mkdir output
+    
+    - name: Move executable to output
+      run: mv dist/订单完工率分析系统.exe ./output/
+    
+    - name: Create ZIP archive
+      working-directory: ./output
+      run: |
+        Compress-Archive -Path 订单完工率分析系统.exe -DestinationPath Windows-App.zip
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Windows-App
+        path: output/Windows-App.zip
