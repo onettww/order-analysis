@@ -37,7 +37,7 @@ jobs:
         Compress-Archive -Path 订单完工率分析系统.exe -DestinationPath Windows-App.zip
     
     - name: Upload artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: Windows-App
         path: output/Windows-App.zip
