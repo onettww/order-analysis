@@ -26,8 +26,8 @@ jobs:
     
     - name: Create PyInstaller hook for Streamlit
       run: |
-        echo "from PyInstaller.utils.hooks import copy_metadata
-datas = copy_metadata('streamlit')" > hooks/hook-streamlit.py
+echo 'from PyInstaller.utils.hooks import copy_metadata
+datas = copy_metadata('\''streamlit'\'')' > hooks/hook-streamlit.py
     
     - name: Build executable with PyInstaller
       run: |
